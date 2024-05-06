@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:singpass/register_screen.dart';
-import 'package:singpass/homepage.dart';
-import 'dart:convert'; // Tambahkan ini
-
+import 'dart:convert';
 
 class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,54 +38,15 @@ class LoginScreen extends StatelessWidget {
                 buildPasswordField('Password', controller: _passwordController),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      String email = _emailController.text;
-                      String password = _passwordController.text;
-
-                      var url = Uri.parse('http://localhost:8000/api/login');
-                      var response = await http.post(
-                        url,
-                        body: jsonEncode({
-                          'email': email,
-                          'password': password,
-                        }),
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                      );
-
-                      if (response.statusCode == 200) {
-                        // Login berhasil
-                        var data = jsonDecode(response.body);
-                        // Simpan data pengguna ke lokal atau lakukan tindakan lain sesuai kebutuhan
-                        Navigator.pushNamed(context, '/register');
-                      } else {
-                        // Login gagal
-                        var errorMessage = jsonDecode(response.body)['message'];
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text('Login Failed'),
-                            content: Text(errorMessage),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/homepage');
-                                },
-                                child: Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    }
+                  onPressed: () {
+                    _login(context);
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
                     minimumSize: MaterialStateProperty.all<Size>(Size(321, 51.91)),
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.symmetric(vertical: 15)),
+                        EdgeInsets.symmetric(vertical: 15)
+                    ),
                   ),
                   child: Text(
                     'Login',
@@ -98,23 +56,6 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => RegisterScreen()),
-                    );
-                  },
-                  child: Text('Create Account'),
-                ),
-                SizedBox(height: 10),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/register');
-                  },
-                  child: Text('Forgot Password?'),
-                ),
               ],
             ),
           ),
@@ -123,7 +64,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget buildTextField(String label, {bool isPassword = false, TextEditingController? controller}) {
+  Widget buildTextField(String label, {bool isPassword = false, required TextEditingController controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -157,7 +98,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget buildPasswordField(String label, {TextEditingController? controller}) {
+  Widget buildPasswordField(String label, {required TextEditingController controller}) {
     bool _obscureText = true;
 
     return Column(
@@ -194,5 +135,68 @@ class LoginScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _login(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      final String email = _emailController.text.trim();
+      final String password = _passwordController.text.trim();
+
+      try {
+        final response = await http.post(
+          Uri.parse('http://localhost:8000/api/login'),
+          body: {
+            'email': email,
+            'password': password,
+          },
+        );
+
+        if (response.statusCode == 200) {
+          // Login berhasil
+          final responseData = json.decode(response.body);
+          final token = responseData['token'];
+          Navigator.pushReplacementNamed(context, '/homepage');
+          // ...
+        } else {
+          // Gagal login
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Login Failed'),
+                content: Text('An error occurred during login. Please try again later.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      } catch (error) {
+        // Tangani kesalahan jaringan atau kesalahan lainnya
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('An error occurred during login. Please try again later.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
   }
 }

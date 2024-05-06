@@ -4,6 +4,8 @@ import 'package:singpass/register_screen.dart';
 import 'package:singpass/homepage.dart';
 import 'package:singpass/personal.dart';
 
+
+
 void main() {
   runApp(MyApp());
 }
@@ -33,7 +35,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: Text('.'),
       ),
       body: Center(
         child: Column(
@@ -45,7 +47,7 @@ class HomeScreen extends StatelessWidget {
                 fontFamily: 'Poppins',
                 fontSize: 48,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue[900],
+                color: Colors.blue[900], // Ubah menjadi biru gelap
               ),
             ),
             SizedBox(height: 50),
@@ -53,19 +55,21 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, '/login');
               },
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                 ),
-                minimumSize: Size(321, 51.91),
-                primary: Colors.blue,
+                minimumSize: MaterialStateProperty.all<Size>(Size(321, 51.91)),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),
               child: Text(
                 'Login',
                 style: TextStyle(
                   fontFamily: 'Perpetua',
                   fontSize: 20,
-                  color: Colors.white,
+                  color: Colors.white, // Ubah menjadi putih
                 ),
               ),
             ),
@@ -74,19 +78,21 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, '/register');
               },
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                 ),
-                minimumSize: Size(321, 51.91),
-                primary: Colors.green,
+                minimumSize: MaterialStateProperty.all<Size>(Size(321, 51.91)),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
               ),
               child: Text(
                 'Register',
                 style: TextStyle(
                   fontFamily: 'Perpetua',
                   fontSize: 20,
-                  color: Colors.white,
+                  color: Colors.white, // Ubah menjadi putih
                 ),
               ),
             ),
