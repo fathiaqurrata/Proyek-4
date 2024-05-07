@@ -3,6 +3,10 @@ import 'package:singpass/login_screen.dart';
 import 'package:singpass/register_screen.dart';
 import 'package:singpass/homepage.dart';
 import 'package:singpass/personal.dart';
+import 'package:singpass/ortu.dart';
+import 'package:singpass/mother.dart';
+import 'package:singpass/father.dart';
+
 
 
 
@@ -25,6 +29,9 @@ class MyApp extends StatelessWidget {
         '/register': (context) => RegisterScreen(),
         '/homepage': (context) => Homepage(),
         '/personal': (context) => FormInputPage(),
+        '/ortu': (context) => FormOrtu(),
+        '/mother': (context) => FormMother(),
+        '/father': (context) => FormFather(),
       },
     );
   }

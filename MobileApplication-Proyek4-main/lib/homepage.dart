@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:singpass/personal.dart';
+import 'package:singpass/ortu.dart';
 
 
 class Homepage extends StatelessWidget {
@@ -133,7 +134,7 @@ class Homepage extends StatelessWidget {
                     text: 'Family',
                     color: const Color(0xFFFB7575),
                     onTap: () {
-                      // Add your on-tap logic here
+                      Navigator.pushNamed(context, '/ortu');
                     },
                   ),
 
